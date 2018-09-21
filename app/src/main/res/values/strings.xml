@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <string name="search_title">Search</string>
+
+    <string name="search_hint"> 09...</string>
+    <string name="toolbar_title">Contacts</string>
+    <string name="name">نام مخاطب : </string>
+    <string name="phone">شماره مخاطب : </string>
+    <string name="contactInfo">اطلاعات مخاطب</string>
+</resources>
