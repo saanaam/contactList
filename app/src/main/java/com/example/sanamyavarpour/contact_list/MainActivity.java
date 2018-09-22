@@ -37,79 +37,74 @@ public class MainActivity extends AppCompatActivity  {
     private RecyclerView contactsRecyclerView;
     private ContactRecyclerAdapter contactRecyclerAdapter;
     private ProgressDialog dialog;
-    private ContactDao mContactDao;
+
     private SearchView searchView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
-
+        setContentView( R.layout.activity_main);
         setUi();
-
-
-        mContactDao = Room.databaseBuilder(this, AppDataBase.class, "contact")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build()
-                .getContactDAO();
-
-
         contactList();
 
     }
 
-        private void contactList(){
+    private void contactList(){
 
-            ApiInterface apiinterface = ApiClient.getClient().create(ApiInterface.class);
-            retrofit2.Call<List<Contact>> call = apiinterface.GetContactList();
+        ApiInterface apiinterface = ApiClient.getClient().create(ApiInterface.class);
+        retrofit2.Call<List<Contact>> call = apiinterface.GetContactList();
 
-            call.enqueue(new Callback<List<Contact>>(){
+        call.enqueue(new Callback<List<Contact>>(){
 
-                @Override
-                public void onResponse(retrofit2.Call<List<Contact>> call, Response<List<Contact>> response) {
-                    if (response.code()==200){
-
+            @Override
+            public void onResponse(retrofit2.Call<List<Contact>> call, Response<List<Contact>> response) {
+                switch (response.code())
+                {
+                    case 200:
                         List<Contact> contactTemp = response.body();
-
                         setUpRecyclerView(contactTemp);
+                        saveContactsToDB(contactTemp);
 
-
-                        for (int i = 0 ; i< contactTemp.size() ; i++) {
-                            Contact contactdb = new Contact();
-                            contactdb.setName( contactTemp.get( i ).getName() );
-                            contactdb.setPhone( contactTemp.get( i ).getPhone() );
-
-                            try {
-                                mContactDao.insert(contactdb);
-                                setResult(RESULT_OK);
-                                finish();
-
-                            } catch (SQLiteConstraintException e) {
-
-                                System.out.println( e.getMessage());
-                            }
-
-                        }
-
-                    }else if(response.code()==403 ){
-
-                        Toast.makeText(MainActivity.this, " token : invalid", Toast.LENGTH_LONG);
-
-                    }else if (response.code()==404){
-                        Toast.makeText(MainActivity.this, " 404 Not Found", Toast.LENGTH_LONG);
-                    }
+                        break;
+                    case  403:
+                        Toast.makeText(MainActivity.this, " token : invalid", Toast.LENGTH_LONG).show();
+                        break;
+                    case 404:
+                        Toast.makeText(MainActivity.this, " 404 Not Found", Toast.LENGTH_LONG).show();
+                        break;
                 }
-                @Override
-                public void onFailure(retrofit2.Call<List<Contact>> call, Throwable t) {
-                    showNoConnectionDialog(MainActivity.this);
-                    setUpRecyclerView( mContactDao.getContacts() );
+            }
+            @Override
+            public void onFailure(retrofit2.Call<List<Contact>> call, Throwable t) {
+                showNoConnectionDialog(MainActivity.this);
+                setUpRecyclerView( Application.getDB().getContactDAO().getContacts() );
 
-                }
-            });
+            }
+        });
+
+    }
+    void saveContactsToDB(List<Contact> contacts)
+    {
+        try {
+            for (int i = 0 ; i< contacts.size() ; i++) {
+                Contact contactdb = new Contact();
+                contactdb.setName( contacts.get( i ).getName() );
+                contactdb.setPhone( contacts.get( i ).getPhone() );
+
+                Application.getDB().getContactDAO().insert(contactdb);
+                setResult(RESULT_OK);
+                finish();
+
+            }
 
         }
+        catch (SQLiteConstraintException e) {
+
+            System.out.println( e.getMessage());
+        }
+
+    }
     private void setUpRecyclerView(List<Contact> contacts) {
         contactRecyclerAdapter = new ContactRecyclerAdapter(MainActivity.this, contacts);
 

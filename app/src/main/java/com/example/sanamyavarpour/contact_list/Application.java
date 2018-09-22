@@ -10,8 +10,11 @@ public class Application extends android.app.Application {
 
     @Override
     public void onCreate() {
-
         super.onCreate();
+        //CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+        //.setDefaultFontPath("IRANSansMobile(FaNum).ttf")
+        //.setFontAttrId(R.attr.fontPath).build());
+        //mDaoSession = new DaoMaster(new DaoMaster.DevOpenHelper(this, "database.db").getWritableDb()).newSession();
         mDataBase = Room.databaseBuilder(this, AppDataBase.class, "contact")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
