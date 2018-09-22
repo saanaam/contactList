@@ -1,15 +1,20 @@
 package com.example.sanamyavarpour.contact_list;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -81,24 +86,23 @@ public class MainActivity extends AppCompatActivity  {
                                 finish();
 
                             } catch (SQLiteConstraintException e) {
-                                Toast.makeText(MainActivity.this, "contact doesnt add", Toast.LENGTH_SHORT).show();
 
+                                System.out.println( e.getMessage());
                             }
 
                         }
 
-
                     }else if(response.code()==403 ){
 
                         Toast.makeText(MainActivity.this, " token : invalid", Toast.LENGTH_LONG);
+
                     }else if (response.code()==404){
                         Toast.makeText(MainActivity.this, " 404 Not Found", Toast.LENGTH_LONG);
                     }
                 }
                 @Override
                 public void onFailure(retrofit2.Call<List<Contact>> call, Throwable t) {
-//                    showNoConnectionDialog(MainActivity.this);
-
+                    showNoConnectionDialog(MainActivity.this);
                     setUpRecyclerView( mContactDao.getContacts() );
 
                 }
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity  {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         // listening to search query text change
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -148,6 +153,30 @@ public class MainActivity extends AppCompatActivity  {
         return true;
     }
 
+    //link to open network settings programmatically
+    public static void showNoConnectionDialog(Context ctx1) {
+        final Context ctx = ctx1;
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setCancelable(true);
+        builder.setMessage("internet connection is failed please connet to internet");
+        builder.setTitle("no_connection_title");
+        builder.setPositiveButton("turn on phone network", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ctx.startActivity(new Intent( Settings.ACTION_WIRELESS_SETTINGS));
+            }
+        });
+        builder.setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            public void onCancel(DialogInterface dialog) {
+                return;
+            }
+        });
+        builder.show();
+    }
 
     void setUi (){
         contactsRecyclerView = findViewById(R.id.contactRecycler);
