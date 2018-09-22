@@ -1,7 +1,6 @@
-package com.example.sanamyavarpour.contact_list.Adapter;
+package com.example.sanamyavarpour.contact_list.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 
 import android.widget.Filter;
 
-import com.example.sanamyavarpour.contact_list.Model.Contact;
+import com.example.sanamyavarpour.contact_list.model.Contact;
 import com.example.sanamyavarpour.contact_list.R;
 
 import java.util.ArrayList;

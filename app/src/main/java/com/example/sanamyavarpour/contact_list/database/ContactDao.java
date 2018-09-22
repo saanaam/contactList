@@ -1,4 +1,4 @@
-package com.example.sanamyavarpour.contact_list.Database;
+package com.example.sanamyavarpour.contact_list.database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.sanamyavarpour.contact_list.Model.Contact;
+import com.example.sanamyavarpour.contact_list.model.Contact;
 
 import java.util.List;
 @Dao

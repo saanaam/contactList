@@ -19,10 +19,10 @@ import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.sanamyavarpour.contact_list.Adapter.ContactRecyclerAdapter;
-import com.example.sanamyavarpour.contact_list.Database.AppDataBase;
-import com.example.sanamyavarpour.contact_list.Database.ContactDao;
-import com.example.sanamyavarpour.contact_list.Model.Contact;
+import com.example.sanamyavarpour.contact_list.adapter.ContactRecyclerAdapter;
+import com.example.sanamyavarpour.contact_list.database.AppDataBase;
+import com.example.sanamyavarpour.contact_list.database.ContactDao;
+import com.example.sanamyavarpour.contact_list.model.Contact;
 import com.example.sanamyavarpour.contact_list.service.ApiClient;
 import com.example.sanamyavarpour.contact_list.service.ApiInterface;
 
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity  {
                 .fallbackToDestructiveMigration()
                 .build()
                 .getContactDAO();
+
 
         contactList();
 
@@ -158,8 +159,8 @@ public class MainActivity extends AppCompatActivity  {
         final Context ctx = ctx1;
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setCancelable(true);
-        builder.setMessage("internet connection is failed please connet to internet");
-        builder.setTitle("no_connection_title");
+        builder.setMessage("internet connection is failed please connect to internet");
+        builder.setTitle("no connection");
         builder.setPositiveButton("turn on phone network", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ctx.startActivity(new Intent( Settings.ACTION_WIRELESS_SETTINGS));

@@ -1,4 +1,4 @@
-package com.example.sanamyavarpour.contact_list.Model;
+package com.example.sanamyavarpour.contact_list.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
